@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Matches — {{ monster.name }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-1">Meine Matches</h1>
+<p class="text-secondary mb-4">Eingeloggt als: <strong>{{ monster.name }}</strong></p>
+
+{% if matches %}
+    <div class="row">
+    {% for match in matches %}
+        {% if match.monster1.id == monster.id %}
+            {% set partner = match.monster2 %}
+        {% else %}
+            {% set partner = match.monster1 %}
+        {% endif %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <img src="https://api.dicebear.com/9.x/monsters/svg?seed={{ partner.name }}"
+                             width="56" height="56" class="rounded-circle" style="background:#0f0f1a; padding:2px;">
+                        <div>
+                            <h5 class="card-title mb-0">{{ partner.name }}</h5>
+                            <span class="badge bg-secondary">{{ partner.monsterTyp.value }}</span>
+                        </div>
+                    </div>
+                    <p class="small mb-1">{{ partner.region }}</p>
+                    <span class="badge bg-success">{{ match.status.value }}</span>
+                    <br>
+                    <small class="text-secondary">{{ match.matchDatum.strftime("%d.%m.%Y %H:%M") }}</small>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <p class="text-secondary">
+        Noch keine Matches.
+        <a href="/suche/{{ monster.id }}">Jetzt suchen!</a>
+    </p>
+{% endif %}
+
+<a href="/" class="btn btn-outline-light mt-3">← Zurück</a>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Monster Dating — Alle Profile{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Alle Monster</h1>
+<div class="row">
+    {% for m in monster %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <img src="https://api.dicebear.com/9.x/monsters/svg?seed={{ m.name }}"
+                         alt="{{ m.name }}" width="56" height="56" class="rounded-circle"
+                         style="background:#0f0f1a; padding:2px;">
+                    <div>
+                        <h5 class="card-title mb-0">{{ m.name }}</h5>
+                        <span class="badge bg-secondary">{{ m.monsterTyp.value }}</span>
+                    </div>
+                </div>
+                <p class="card-text small mb-1 text-secondary">{{ m.alter }} Jahre · {{ m.region }}</p>
+                {% if m.hobbys %}
+                <p class="small mb-2">
+                    {% for h in m.hobbys[:2] %}
+                    <span class="badge me-1" style="background:#2d4a7a;">{{ h }}</span>
+                    {% endfor %}
+                    {% if m.hobbys | length > 2 %}
+                    <span class="text-secondary">+{{ m.hobbys | length - 2 }}</span>
+                    {% endif %}
+                </p>
+                {% endif %}
+                <div class="d-flex gap-2 mt-2">
+                    <a href="/profil/{{ m.id }}" class="btn btn-sm btn-outline-light">Profil</a>
+                    <a href="/suche/{{ m.id }}" class="btn btn-sm btn-success">Suchen</a>
+                    <a href="/matches/{{ m.id }}" class="btn btn-sm btn-warning">Matches</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

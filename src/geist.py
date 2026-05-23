@@ -1,6 +1,6 @@
 from src.monster import Monster, MonsterTyp
 
 
-class Vampir(Monster):
+class Geist(Monster):
     def __init__(self, id, name, alter, region, hobbys=None, aengste=None, kullanici_adi=None, sifre="passwort123"):
-        super().__init__(id, name, MonsterTyp.VAMPIR, alter, region, hobbys, aengste, kullanici_adi, sifre)
+        super().__init__(id, name, MonsterTyp.GEIST, alter, region, hobbys, aengste, kullanici_adi, sifre)
