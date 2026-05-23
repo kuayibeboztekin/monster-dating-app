@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ monster.name }} — Profil{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-4 mb-4">
+    <img src="https://api.dicebear.com/9.x/monsters/svg?seed={{ monster.name }}"
+         alt="{{ monster.name }}" width="110" height="110" class="rounded-circle"
+         style="background:#0f0f1a; padding:4px;">
+    <div>
+        <h1 class="mb-1">{{ monster.name }}</h1>
+        <span class="badge bg-secondary fs-6">{{ monster.monsterTyp.value }}</span>
+    </div>
+</div>
+
+<ul class="list-group list-group-flush w-50 mb-4">
+    <li class="list-group-item"><strong>Alter:</strong> {{ monster.alter }} Jahre</li>
+    <li class="list-group-item"><strong>Region:</strong> {{ monster.region }}</li>
+    <li class="list-group-item"><strong>Aktiv:</strong> {{ "Ja" if monster.aktiv else "Nein" }}</li>
+</ul>
+
+{% if monster.hobbys %}
+<div class="mb-3">
+    <h5>Hobbys</h5>
+    {% for h in monster.hobbys %}
+    <span class="badge me-1 mb-1" style="background:#2d4a7a;">{{ h }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if monster.aengste %}
+<div class="mb-4">
+    <h5>Ängste</h5>
+    {% for a in monster.aengste %}
+    <span class="badge me-1 mb-1" style="background:#5a1a1a;">{{ a }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="d-flex gap-2">
+    <a href="/suche/{{ monster.id }}" class="btn btn-success">Suchen</a>
+    <a href="/matches/{{ monster.id }}" class="btn btn-warning">Matches</a>
+    <a href="/" class="btn btn-outline-light">← Zurück</a>
+</div>
+{% endblock %}

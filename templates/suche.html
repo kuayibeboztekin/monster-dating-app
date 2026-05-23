@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Suche — {{ monster.name }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-1">Suche</h1>
+<p class="text-secondary mb-3">Eingeloggt als: <strong>{{ monster.name }}</strong> ({{ monster.monsterTyp.value }})</p>
+
+<!-- Filter -->
+<form method="get" class="mb-4 p-3 rounded" style="background:#16213e; border:1px solid #333;">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-2">
+            <label class="form-label small">Alter von</label>
+            <input type="number" name="alter_min" class="form-control form-control-sm bg-dark text-light border-secondary"
+                   value="{{ filter_alter_min }}" placeholder="0">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Alter bis</label>
+            <input type="number" name="alter_max" class="form-control form-control-sm bg-dark text-light border-secondary"
+                   value="{{ filter_alter_max }}" placeholder="1000">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Region</label>
+            <select name="region" class="form-select form-select-sm bg-dark text-light border-secondary">
+                <option value="">Alle</option>
+                {% for r in alle_regionen %}
+                <option value="{{ r.lower() }}" {% if filter_region == r.lower() %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Typ</label>
+            <select name="monster_typ" class="form-select form-select-sm bg-dark text-light border-secondary">
+                <option value="">Alle</option>
+                {% for t in alle_typen %}
+                <option value="{{ t }}" {% if filter_typ == t %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Hobby</label>
+            <select name="hobby" class="form-select form-select-sm bg-dark text-light border-secondary">
+                <option value="">Alle</option>
+                {% for h in alle_hobbys %}
+                <option value="{{ h.lower() }}" {% if filter_hobby == h.lower() %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-sm btn-outline-light w-100">Filtern</button>
+        </div>
+    </div>
+</form>
+
+{% if kandidaten_mit_score %}
+    {% set k, score = kandidaten_mit_score[0] %}
+    <div class="card mx-auto" style="max-width: 440px;">
+        <div class="card-body text-center py-4">
+            <img src="https://api.dicebear.com/9.x/monsters/svg?seed={{ k.name }}"
+                 alt="{{ k.name }}" width="100" height="100" class="rounded-circle mb-3"
+                 style="background:#0f0f1a; padding:4px;">
+            <h2 class="mb-1">{{ k.name }}</h2>
+            <span class="badge bg-secondary mb-2">{{ k.monsterTyp.value }}</span>
+            <p class="mb-1 text-secondary">{{ k.alter }} Jahre · {{ k.region }}</p>
+
+            <!-- Kompatibilität -->
+            <div class="my-3">
+                <div class="d-flex justify-content-between small mb-1">
+                    <span>Kompatibilität</span>
+                    <strong>{{ score.prozent }}%</strong>
+                </div>
+                <div class="progress" style="height:8px; background:#333;">
+                    <div class="progress-bar" role="progressbar"
+                         style="width:{{ score.prozent }}%; background:#c9a0dc;"></div>
+                </div>
+            </div>
+
+            {% if score.gemeinsame_hobbys %}
+            <p class="small mb-1">
+                <span class="text-success">Gemeinsame Hobbys:</span>
+                {{ score.gemeinsame_hobbys | join(", ") }}
+            </p>
+            {% endif %}
+            {% if score.gemeinsame_aengste %}
+            <p class="small mb-2">
+                <span class="text-warning">Gemeinsame Ängste:</span>
+                {{ score.gemeinsame_aengste | join(", ") }}
+            </p>
+            {% endif %}
+
+            <div class="d-flex justify-content-center gap-4 mt-3">
+                <a href="/swipe/{{ monster.id }}/{{ k.id }}/links" class="btn btn-danger btn-lg px-4">❌ Nein</a>
+                <a href="/swipe/{{ monster.id }}/{{ k.id }}/rechts" class="btn btn-success btn-lg px-4">💚 Ja</a>
+            </div>
+        </div>
+    </div>
+
+    {% if kandidaten_mit_score | length > 1 %}
+    <p class="text-center text-secondary mt-3 small">
+        Noch {{ (kandidaten_mit_score | length) - 1 }} weitere Kandidaten
+    </p>
+    {% endif %}
+{% else %}
+    <div class="text-center py-5">
+        <p class="fs-5 text-secondary">Keine Kandidaten gefunden.</p>
+        <a href="/suche/{{ monster.id }}" class="btn btn-outline-light btn-sm">Filter zurücksetzen</a>
+    </div>
+{% endif %}
+
+<div class="text-center mt-4">
+    <a href="/matches/{{ monster.id }}" class="btn btn-outline-light btn-sm">Meine Matches</a>
+    <a href="/" class="btn btn-outline-secondary btn-sm ms-2">← Zurück</a>
+</div>
+{% endblock %}

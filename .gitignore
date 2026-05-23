@@ -1,24 +1,27 @@
 # Python
+.venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pyc
-.Python
-*.egg-info/
-.venv/
-venv/
-dist/
-build/
-
-# Environment
-.env
-
-# PyCharm / JetBrains
-.idea/
-*.iml
-*.iws
-*.ipr
 
 # macOS
 .DS_Store
+
+# Environment files
+.env
+.env.local
+
+# Test/cache
+.pytest_cache/
+.coverage
+
+# Build outputs
+dist/
+build/
+*.app
+*.zip
+
+# IDE
+.vscode/
+.idea/
